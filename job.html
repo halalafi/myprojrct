@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            }
+        
+
+        /* Body and container styles */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            font-family: 'Tajawal', sans-serif;
+            direction: rtl; /* Right-to-left for Arabic */
+            height: 100vh;
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            padding: 30px; /* Margin around the container */
+            background-color: #a68ba3;
+        }
+
+        .container {
+            
+            width: 900px;
+            height: 800px;
+            max-width: calc(100% - 80px); /* 30px padding on each side */
+            max-height: calc(100% - 80px); /* 30px padding on each side */
+            display: flex;
+            background-color: rgba(0, 0, 0, 0.482);
+            
+            flex-direction: column;
+            border-radius: 20px;
+            overflow: auto;
+            overflow-y: auto!important;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+
+        /* Header */
+        .header {
+            background-color: #744b78;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            font-family: 'Tajawal', sans-serif;
+            padding: 10px 20px;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* لجعل الشكل دائرة */
+            overflow: hidden; /* لضمان أن الصورة داخل الدائرة */
+            display: inline-block;
+        }
+
+        .icon-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* لتغطية الدائرة بالكامل بالصورة */
+        }
+
+        .title {
+            font-size: 20px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: bold;
+        }
+
+        /* Chat button */
+        .chat-button-container {
+            text-align: left;
+            left: 10px; /* يحرك العنصر إلى اليسار */
+            padding: 10px;
+            size: 30px;
+        }
+
+        .chat-button-container button{
+            background-color: #8f4d8d;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .chat-button:hover {
+            background-color: #ae51ca;
+        }
+
+
+        /* Chat area */
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto !important; /* إظهار شريط التمرير عند الحاجة */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 0; /* إزالة المسافة بين الشات وصندوق الإدخال */
+        }
+
+        .welcome-message {
+            color: #ffffff;
+            font-size: 25px;
+            font-family: 'Tajawal', sans-serif;
+            padding-bottom: 20px !important;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .question-button {
+            background-color: #90769e;
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .question-button:hover {
+            background-color: #3d0ced;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* Messages */
+        .message {
+            padding: 10px;
+            font-family: 'Tajawal', sans-serif;
+            
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            width: fit-content;
+            max-width: 70%;
+        }
+
+        /* User Message Style */
+        .user-message {
+            background: linear-gradient(135deg, #9c7bb1, #bc9ee3); /* Gradiented color for user messages */
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            align-self: flex-end;
+            text-align: left !important;
+            border-radius: 20px 20px 0 20px; /* Rounded edges */
+            padding: 10px;
+            border-radius: 20px 20px 0 20px;
+            align-self: flex-end;
+        }
+
+        /* System Message Style */
+        .system-message {
+    background: linear-gradient(135deg, #b0c4de, #7f8c8d); /* Gradiented color for system messages */
+    color: #fff;
+    font-family: 'Tajawal', sans-serif;
+    text-align: right !important;
+    border-radius: 20px 20px 0 20px; /* Rounded edges */
+    padding: 10px;
+    align-self: flex-end;
+    float: right; /* Make the element align to the right */
+    margin-left: auto; /* Push the element fully to the right */
+    margin-right: 0; /* Remove any margin on the right side */
+}
+
+       /* Input area */
+.input-container {
+    width: 100px !important;
+    height: 40px !important ;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+
+        .input-box {
+    width: 830px;
+    height: 40px !important;
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+}
+.send-button {
+    background:  linear-gradient(135deg, #885781, #d55acd);
+    border: none;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    
+}
+
+        .send-button:hover {
+            background-color: #9f5e8f;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #854c87;
+            color: #fff;
+            font-size: 12px;
+        }
+        .chat-button{
+            font-family: 'Tajawal', sans-serif; 
+
+        }
+        /* تنسيق الحاوية */
+.chatbb {
+            position: fixed !important; /* تثبيت الزر */
+            top: 10px !important; /* جعله في الأعلى */
+            padding-top: 20px !important; /* مسافة بين الزر والحافة العلوية */
+            right: 90px; /* وضعه في الزاوية اليمنى */
+            z-index: 9999; /* تأكيد أنه فوق كل العناصر */
+            color: #fff !important; /* لون النص */
+            size: 35px !important; /* حجم الخط */
+            font-size: 35px !important; /* حجم الخط */
+            forced-color-adjust: #fff !important; /* لتجنب تغيير الألوان */
+        }
+        
+       
+    </style>
+</head>
+<link rel="apple-touch-icon" sizes="180x180" href="https://norby.io/images/favicon/apple-touch-icon.png">
+    <link rel="shortcut icon" type="image/png" sizes="32x32" href="https://norby.io/images/favicon/favicon-32x32.png">
+    <link rel="shortcut icon" type="image/png" sizes="16x16" href="https://norby.io/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://norby.io/site.webmanifest">
+    <link rel="mask-icon" href="https://norby.io/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#fffff">
+
+<body>
+    <div class="chatbb" style="size: 35px !important; color: #fff !important;">
+        <a href="ANU.AI.Chat.html">
+            <svg class="menu-icon" width="55" height="55" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.25 10.832V19.5001C20.25 19.699 20.171 19.8898 20.0303 20.0304C19.8897 20.1711 19.6989 20.2501 19.5 20.2501H15C14.8011 20.2501 14.6103 20.1711 14.4697 20.0304C14.329 19.8898 14.25 19.699 14.25 19.5001V15.0001C14.25 14.8012 14.171 14.6104 14.0303 14.4698C13.8897 14.3291 13.6989 14.2501 13.5 14.2501H10.5C10.3011 14.2501 10.1103 14.3291 9.96967 14.4698C9.82902 14.6104 9.75 14.8012 9.75 15.0001V19.5001C9.75 19.699 9.67098 19.8898 9.53033 20.0304C9.38968 20.1711 9.19891 20.2501 9 20.2501H4.5C4.30109 20.2501 4.11032 20.1711 3.96967 20.0304C3.82902 19.8898 3.75 19.699 3.75 19.5001V10.832C3.75001 10.7275 3.77187 10.6241 3.81416 10.5285C3.85646 10.433 3.91827 10.3473 3.99562 10.277L11.4956 3.19511C11.6337 3.06942 11.8137 2.99976 12.0005 2.99976C12.1872 2.99976 12.3672 3.06942 12.5053 3.19511L20.0053 10.277C20.0825 10.3474 20.1441 10.4331 20.1863 10.5286C20.2284 10.6242 20.2501 10.7275 20.25 10.832Z" fill="white" fill-opacity="0.3"></path>
+                <path d="M20.5153 9.72855L13.0153 2.6523C13.0116 2.6491 13.0082 2.64566 13.005 2.64199C12.7289 2.39086 12.369 2.25171 11.9958 2.25171C11.6225 2.25171 11.2627 2.39086 10.9866 2.64199L10.9763 2.6523L3.48469 9.72855C3.33187 9.86907 3.20989 10.0398 3.12646 10.2299C3.04303 10.42 2.99997 10.6253 3 10.8329V19.5001C3 19.8979 3.15804 20.2795 3.43934 20.5608C3.72064 20.8421 4.10218 21.0001 4.5 21.0001H9C9.39782 21.0001 9.77936 20.8421 10.0607 20.5608C10.342 20.2795 10.5 19.8979 10.5 19.5001V15.0001H13.5V19.5001C13.5 19.8979 13.658 20.2795 13.9393 20.5608C14.2206 20.8421 14.6022 21.0001 15 21.0001H19.5C19.8978 21.0001 20.2794 20.8421 20.5607 20.5608C20.842 20.2795 21 19.8979 21 19.5001V10.8329C21 10.6253 20.957 10.42 20.8735 10.2299C20.7901 10.0398 20.6681 9.86907 20.5153 9.72855ZM19.5 19.5001H15V15.0001C15 14.6023 14.842 14.2208 14.5607 13.9395C14.2794 13.6582 13.8978 13.5001 13.5 13.5001H10.5C10.1022 13.5001 9.72064 13.6582 9.43934 13.9395C9.15804 14.2208 9 14.6023 9 15.0001V19.5001H4.5V10.8329L4.51031 10.8236L12 3.75011L19.4906 10.8217L19.5009 10.8311L19.5 19.5001Z" fill="white"></path>
+            </svg>
+        </a>
+    </div>
+    <div class="container">
+        <div class="header">
+            <div class="icon">
+                <img src="https://norby.io/images/favicon/apple-touch-icon.png" alt="Icon" class="icon-image">
+            </div>
+            <h1 class="title" style="font-family: 'Tajawal', sans-serif;"> مساعد الوظائف </h1>
+        </div>
+
+        <div class="chat-button-container">
+            <button class="chat-button"  onclick="startChat()">🏠︎</button>
+        </div>
+
+        <!-- صندوق المحادثة -->
+        <div class="chat-container" id="chatContainer">
+            <p class="welcome-message">مرحبًا بك في مساعد الوظائف الذكي! أنا هنا لأساعدك في العثور على وظائف مناسبة.</p>
+            <div class="button-group">
+                <button class="question-button" onclick="askSpecialtyQuestion()">ما هو التخصص الذي تود معرفة الوظائف الممكنة للخريجين؟</button>
+                <button class="question-button" onclick="askCompaniesQuestion()">هل ترغب في معرفة الشركات المتاحة لتخصصك في منطقة معينة؟</button>
+                <button class="question-button" onclick="askJobSearch()">يمكنني مساعدتك في البحث عن وظائف متاحة حسب تخصصك ومهاراتك!</button>
+                <button class="question-button" onclick="uploadResume()">يمكنني قراءة سيرتك الشخصية ومساعدتك في البحث عن وظائف!</button>
+                <button class="question-button" onclick="createResume()">يمكنني مساعدتك في إنشاء سيرتك الذاتية!</button>
+            </div>
+        </div>
+
+        <!-- صندوق الإدخال الذي سيظهر داخل المحادثة -->
+        <div class="input-container" id="inputContainer" style="display: none;">
+            <input type="text" id="specialtyInput" class="input-box" placeholder="أدخل التخصص هنا">
+            <button class="send-button" onclick="fetchJobsAsMessages()">&#10148;</button>
+        </div>  
+    </div>
+    <script>
+        // بدء المحادثة
+        function startChat() {
+            const chatContainer = document.getElementById("chatContainer");
+            const inputContainer = document.getElementById("inputContainer");
+    
+            // مسح المحادثة
+            chatContainer.innerHTML = `
+                <p class="welcome-message">مرحبًا بك في مساعد الوظائف الذكي! أنا هنا لأساعدك في العثور على وظائف مناسبة.</p>
+                <div class="button-group">
+                    <button class="question-button" onclick="askSpecialtyQuestion()">ما هو التخصص الذي تود معرفة الوظائف الممكنة للخريجين؟</button>
+                    <button class="question-button" onclick="askCompaniesQuestion()">هل ترغب في معرفة الشركات المتاحة لتخصصك في منطقة معينة؟</button>
+                    <button class="question-button" onclick="askJobSearch()">يمكنني مساعدتك في البحث عن وظائف متاحة حسب تخصصك ومهاراتك!</button>
+                    <button class="question-button" onclick="uploadResume()">يمكنني قراءة سيرتك الشخصية ومساعدتك في البحث عن وظائف!</button>
+                    <button class="question-button" onclick="createResume()">يمكنني مساعدتك في إنشاء سيرتك الذاتية!</button>
+                </div>`;
+            inputContainer.style.display = "none";
+        }
+    
+        // طرح السؤال عن التخصص عند الضغط على الزر
+    function askSpecialtyQuestion() {
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.innerHTML = `<p class="system-message">ما هو التخصص الذي تود معرفة الوظائف الممكنة للخريجين؟</p>`;
+        chatContainer.innerHTML = `
+            <input type="text" id="specialtyInput"  class="inputcontainer"  style="height: 40px !important;" placeholder="أدخل التخصص هنا">
+            <button class="send-button" style ="height:30px !importan;" onclick="fetchJobsAsMessages()"> &#10148;</button>
+        `;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // استدعاء API للحصول على الوظائف وعرضها كرسائل
+    function fetchJobsAsMessages() {
+        const specialtyInput = document.getElementById("specialtyInput");
+        const query = specialtyInput.value.trim(); // قراءة التخصص من الحقل
+
+        if (!query) {
+            alert("يرجى إدخال التخصص!");
+            return;
+        }
+
+        // عرض رسالة المستخدم
+        displayUserMessage(`التخصص الذي أدخلته: ${query}`);
+
+        // عرض رسالة تحميل أثناء انتظار الرد
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.innerHTML += `<p class="system-message">جارٍ البحث عن الوظائف للتخصص: ${query}...</p>`;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // استدعاء API باستخدام fetch
+        fetch(`/jobs?query=${encodeURIComponent(query)}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("لم يتم العثور على وظائف تناسب هذا التخصص.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayJobsAsMessages(data);
+        })
+        .catch(error => {
+            chatContainer.innerHTML += `<p class="system-message">خطأ: ${error.message}</p>`;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+    }
+
+    // عرض الوظائف كرسائل
+    function displayJobsAsMessages(jobs) {
+        const chatContainer = document.getElementById("chatContainer");
+        if (jobs && jobs.length > 0) {
+            jobs.forEach(job => {
+                chatContainer.innerHTML += `
+                    <div class="system-message">
+                        <p><strong>عنوان الوظيفة:</strong> ${job.title}</p>
+                        <p><strong>الوصف:</strong> ${job.description}</p>
+                    </div>
+                `;
+            });
+        } else {
+            chatContainer.innerHTML += `<p class="system-message">لا توجد وظائف تتطابق مع التخصص الذي أدخلته.</p>`;
+        }
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // عرض رسالة المستخدم
+    function displayUserMessage(message) {
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.innerHTML += `<p class="user-message">${message}</p>`;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+        // طرح السؤال عن الشركات
+    function askCompaniesQuestion() {
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.innerHTML = `
+            <p class="system-message">من فضلك أدخل التخصص والمنطقة لمعرفة الشركات المتاحة:</p>
+            <p class="system-message">التخصص:</p>
+            <input type="text" id="specializationInput" class="input-box" placeholder="التخصص">
+            <p class="system-message">المنطقة:</p>
+            <input type="text" id="cityInput" class="input-box" placeholder="المنطقة">
+            <button class="send-button" onclick="searchCompanies()">ابحث عن الشركات</button>`;
+    }
+
+    // البحث عن الشركات
+    function searchCompanies() {
+        const specialization = document.getElementById("specializationInput").value.trim();
+        const city = document.getElementById("cityInput").value.trim();
+
+        if (!specialization || !city) {
+            alert("يرجى إدخال التخصص والمنطقة!");
+            return;
+        }
+
+        displayUserMessage(`أبحث عن شركات في تخصص: ${specialization} في منطقة: ${city}`);
+
+        // الاتصال بـ API البحث باستخدام Google
+        fetch(`/search_companies_google?city=${city}&specialization=${specialization}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("حدث خطأ أثناء البحث عن الشركات عبر Google.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayCompanyLinks(data.company_links);
+            })
+            .catch(error => {
+                alert(`خطأ: ${error.message}`);
+            });
+
+        // الاتصال بـ API البحث في ملف الشركات المحلي
+        fetch("/search_companies", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ city, specialization }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("حدث خطأ أثناء البحث عن الشركات في الملف المحلي.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayCompanyResults(data);
+            })
+            .catch(error => {
+                alert(`خطأ: ${error.message}`);
+            });
+    }
+
+    // عرض الروابط من Google
+    function displayCompanyLinks(links) {
+        const chatContainer = document.getElementById("chatContainer");
+        if (links && links.length > 0) {
+            chatContainer.innerHTML += `<p class="system-message">روابط الشركات من Google:</p>`;
+            links.forEach(link => {
+                chatContainer.innerHTML += `<p class="system-message"><a href="${link}" target="_blank">${link}</a></p>`;
+            });
+        } else {
+            chatContainer.innerHTML += `<p class="system-message">لم يتم العثور على روابط من Google.</p>`;
+        }
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // عرض نتائج الشركات من الملف المحلي
+    function displayCompanyResults(companies) {
+        const chatContainer = document.getElementById("chatContainer");
+        if (companies && companies.length > 0) {
+            chatContainer.innerHTML += `<p class="system-message">نتائج الشركات من الملف المحلي:</p>`;
+            companies.forEach(company => {
+                chatContainer.innerHTML += `
+                    <p class="system-message">
+                        <strong>اسم الشركة:</strong> ${company.company}<br>
+                        <strong>الموقع:</strong> ${company.location}<br>
+                        <strong>التخصص:</strong> ${company.specialization}
+                    </p>`;
+            });
+        } else {
+            chatContainer.innerHTML += `<p class="system-message">لم يتم العثور على شركات مطابقة في الملف المحلي.</p>`;
+        }
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // عرض رسالة المستخدم
+function displayUserMessage(message) {
+    const chatContainer = document.getElementById("chatContainer");
+    chatContainer.innerHTML += `<p class="user-message">${message}</p>`;
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+// عرض رسالة المستخدم
+function displayUserMessage(message) {
+    const chatContainer = document.getElementById("chatContainer");
+    chatContainer.innerHTML += `<p class="user-message">${message}</p>`;
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+// طرح السؤال عن المهارات
+function askJobSearch() {
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.innerHTML = `
+            <p class="system-message">من فضلك أدخل التخصص والمنطقة لمعرفة وظائف المتاحة:</p>
+            <p class="system-message">التخصص:</p>
+            <input type="text" id="specializationInput" class="input-box" placeholder="التخصص">
+            <p class="system-message">المهارات :</p>
+            <input type="text" id="skillInput" class="input-box" placeholder="ادخل مهاراتك مفصولة بفواصل .">
+            <button class="send-button" onclick="searchjob()">ابحث عن وظائف</button>`;
+    }
+
+    // البحث عن وظائف
+    function searchjob() {
+        const specialization = document.getElementById("specializationInput").value.trim();
+        const skill = document.getElementById("skillInput").value.trim();
+
+        if (!specialization || !skill) {
+            alert("يرجى إدخال التخصص والمنطقة!");
+            return;
+        }
+
+        displayUserMessage(`أبحث عن وظائف في تخصص: ${specialization} في منطقة: ${skill}`);
+        displayUserMessage("جاري البحث...");
+
+        // الاتصال بـ API البحث باستخدام Google
+        fetch(`/search_jobs_google?specialty=${specialization}&skills=${skill}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("حدث خطأ أثناء البحث عن وظائف عبر Google.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayCompanyLinks(data.job_links); // تأكد من أن المفتاح الصحيح هو job_links
+            })
+            .catch(error => {
+                alert(`خطأ: ${error.message}`);
+            });
+    }
+
+    // عرض الروابط من Google
+    function displayCompanyLinks(links) {
+        const chatContainer = document.getElementById("chatContainer");
+        if (links && links.length > 0) {
+            chatContainer.innerHTML += `<p class="system-message">روابط وظائف من Google:</p>`;
+            links.forEach(link => {
+                chatContainer.innerHTML += `
+                    <p class="system-message">
+                        <a href="${link}" target="_blank" style="color: #1a73e8;">${link}</a>
+                    </p>`;
+            });
+        } else {
+            chatContainer.innerHTML += `<p class="system-message">لم يتم العثور على روابط من Google.</p>`;
+        }
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // عرض رسالة المستخدم
+    function displayUserMessage(message) {
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.innerHTML += `<p class="user-message">${message}</p>`;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+// دالة لإرسال البيانات عند الضغط على الزر
+function jobSearch() {
+    const specialty = document.getElementById("specializationInput").value.trim();
+    const skills = document.getElementById("skillsInput").value.trim(); // Fixing the variable reference
+    if (!specialty || !skills) {
+        alert("يرجى إدخال التخصص والمهارات!");
+        return;
+    }
+    displayUserMessage(`أبحث عن وظائف في تخصص: ${specialization}ومهارات : ${skills}`);
+
+
+    // إرسال البيانات باستخدام fetch إلى FastAPI
+    fetch(`/search_jobs_google?specialty=${specialty}&skills=${skills}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("حدث خطأ أثناء البحث عن الوظائف عبر Google.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayJobLinks(data.jobs_links);
+        })
+        .catch(error => {
+            alert(`خطأ: ${error.message}`);
+        });
+}
+
+// عرض الروابط من Google
+function displayJobLinks(links) {
+    const chatContainer = document.getElementById("chatContainer");
+    if (links && links.length > 0) {
+        chatContainer.innerHTML += `<p class="system-message">روابط الوظائف من Google:</p>`;
+        links.forEach(link => {
+            chatContainer.innerHTML += `<p class="system-message"><a href="${link}" target="_blank">${link}</a></p>`;
+        });
+    } else {
+        chatContainer.innerHTML += `<p class="system-message">لم يتم العثور على روابط من Google.</p>`;
+    }
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+// تحميل السيرة الذاتية
+function uploadResume() {
+    const chatContainer = document.getElementById("chatContainer");
+    chatContainer.innerHTML = `
+        <p class="system-message" style="font-size: 20px; background-color: #90769e !important;">يمكنني قراءة سيرتك الشخصية ومساعدتك في البحث عن وظائف!</p>
+        <p class="system-message">من فضلك، قم بتحميل سيرتك الذاتية لتحليل مهاراتك ومساعدتك في العثور على الوظائف المناسبة:</p>
+        <form id="uploadForm">
+            <input type="file" id="pdfFile" style="font-size: 20px; background-color: #90769e !important;" accept=".pdf,.doc,.docx">
+            <button type="submit" class="send-button">إبحث عن وظائف متاحة</button>
+        </form>
+    `;
+
+    // إضافة المستمع للأحداث بعد تحميل المحتوى
+    document.getElementById("uploadForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // منع إعادة تحميل الصفحة عند الضغط على زر الإرسال
+
+        const pdfFile = document.getElementById("pdfFile").files[0];
+        console.log(pdfFile); // للتأكد من أن الملف تم اختياره
+        if (!pdfFile) {
+            alert("يرجى اختيار ملف PDF أو DOCX.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", pdfFile);
+
+        try {
+            // إرسال البيانات إلى API لتحليل الملف
+            const response = await fetch("http://127.0.0.1:8000/upload-pdf/", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            // التعامل مع الاستجابة JSON
+            const data = await response.json();
+            console.log(data);  // لعرض البيانات المستلمة من API
+
+            // التحقق من البيانات القادمة من الـ API وتحديث الصفحة
+            if (data.error) {
+                // إظهار رسالة الخطأ في الشات كونتير
+                chatContainer.innerHTML += `
+                    <p class="error-message">${data.error}</p>
+                `;
+            } else {
+                // عرض التخصص والمهارات في الشات كونتير
+                chatContainer.innerHTML += `
+                    <p class="system-message">التخصص: ${data.specialization || "غير محدد"}</p>
+                    <p class="system-message">المهارات: ${data.skills.length > 0 ? data.skills.join(", ") : "لا توجد مهارات"}</p>
+                `;
+
+                // عرض روابط الوظائف كـ "system-message"
+                if (data.job_links && data.job_links.length > 0) {
+                    chatContainer.innerHTML += `
+                        <p class="system-message">الوظائف المتاحة:</p>
+                    `;
+                    data.job_links.forEach(link => {
+                        chatContainer.innerHTML += `
+                            <p class="system-message"><a href="${link}" target="_blank">${link}</a></p>
+                        `;
+                    });
+                } else {
+                    chatContainer.innerHTML += `
+                        <p class="system-message">لا توجد وظائف متاحة في الوقت الحالي.</p>
+                    `;
+                }
+            }
+
+        } catch (error) {
+            console.error(error);  // عرض الأخطاء في الـ Console
+            chatContainer.innerHTML += `
+                <p class="error-message">حدث خطأ أثناء تحليل الملف: ${error.message || "يرجى المحاولة لاحقًا"}</p>
+            `;
+        }
+    });
+}
+// إنشاء السيرة الذاتية
+function createResume() {
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.innerHTML = `
+            <p class="system-message" style="font-size: 20px;">يمكنني مساعدتك في إنشاء سيرتك الذاتية!</p>
+            <p class="system-message">أدخل معلوماتك لإنشاء السيرة الذاتية:</p>
+            <p class="system-message">الاسم الكامل:</p>
+            <input type="text" class="input-box" id="fullNameInput" placeholder="اسمك الكامل">
+            <p class="system-message">التخصص:</p>
+            <input type="text" class="input-box" id="specialtyInput" placeholder="تخصصك">
+            <p class="system-message">الجامعة التي تخرجت منها:</p>
+            <input type="text" class="input-box" id="universityInput" placeholder="اسم الجامعة">
+            <p class="system-message">معلومات الاتصال:</p>
+            <input type="text" class="input-box" id="contactInfoInput" placeholder="رقم الهاتف أو البريد الإلكتروني">
+            <p class="system-message">المهارات:</p>
+            <input type="text" class="input-box" id="skillsInput" placeholder="اذكر مهاراتك مفصولة بفواصل">
+            <button class="send-button" onclick="generateCV()">إنشاء السيرة الذاتية</button>
+        `;
+    }
+
+    // إرسال البيانات وتوليد السيرة الذاتية
+    function generateCV() {
+        const fullName = document.getElementById('fullNameInput').value;
+        const specialty = document.getElementById('specialtyInput').value;
+        const university = document.getElementById('universityInput').value;
+        const contactInfo = document.getElementById('contactInfoInput').value;
+        const skills = document.getElementById('skillsInput').value;
+
+        // تحقق من البيانات في الـ console
+        console.log({
+            fullName: fullName,
+            specialty: specialty,
+            university: university,
+            contactInfo: contactInfo,
+            skills: skills
+        });
+
+        const formData = new FormData();
+        formData.append('name', fullName);
+        formData.append('specialization', specialty);
+        formData.append('skills', skills);
+        formData.append('education', university);
+        formData.append('experience', 'No experience');  // مثال، قم بتعديل ذلك حسب الحاجة
+        formData.append('contact_info', contactInfo);
+
+        fetch('/create_cv/', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                throw new Error('Error creating CV');
+            }
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'CV.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('فشل في إنشاء السيرة الذاتية. الرجاء المحاولة مرة أخرى.');
+        });
+    }
+
+// عرض رسالة المستخدم
+function displayUserMessage(message) {
+    const chatContainer = document.getElementById("chatContainer");
+    chatContainer.innerHTML += `<p class="user-message">${message}</p>`;
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// عرض رسالة النظام
+function displaySystemMessage(message) {
+    const chatContainer = document.getElementById("chatContainer");
+    chatContainer.innerHTML += `<p class="system-message">${message}</p>`;
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+    </script>
+    
+</body>
+</html>
